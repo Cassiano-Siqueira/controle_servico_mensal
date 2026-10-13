@@ -169,7 +169,7 @@ header {
 /* KPIs */
 .kpis {
     display: grid;
-    grid-template-columns: 2fr repeat(3, 1fr);
+    grid-template-columns: 2fr 1fr;
     gap: 13px;
 }
 
@@ -332,7 +332,7 @@ header {
     content: "";
     position: absolute;
     inset: 34px;
-    background: #fff;
+    background: var(--white);
     border-radius: 50%;
 }
 
@@ -395,8 +395,9 @@ header {
     border-left: 3px solid var(--blue);
     background: #fff;
     border-radius: 0 12px 12px 0;
-    padding: 14px 16px;
+    padding: 16px 18px;
     box-shadow: 0 3px 12px #0f172a06;
+
 }
 
 .insight.critical {
@@ -404,7 +405,7 @@ header {
 }
 
 .insight .tag {
-    font-size: 10px;
+    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: .08em;
     font-weight: 800;
@@ -414,7 +415,7 @@ header {
 .insight p {
     margin: 8px 0 0;
     line-height: 1.55;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 /* Tabela */
@@ -547,4 +548,71 @@ tbody tr.rank1 td:first-child { font-weight: 800; color: var(--navy); }
     .filter { min-width: 100%; }
     .btn { width: 100%; }
     .tabletop { align-items: flex-start; flex-direction: column; }
+}
+
+/* Estilo do Botão de Tema */
+.theme-btn {
+    background: transparent;
+    border: 1px solid #64748B;
+    border-radius: 99px;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #CBD5E1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: background .2s, transform .2s;
+}
+
+.theme-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Variáveis e Cores do Modo Escuro */
+body.dark-mode {
+    --navy: #3B82F6;
+    --blue: #60A5FA;
+    --pale: #1E3A8A;
+    --ink: #F8FAFC;
+    --slate: #94A3B8;
+    --bg: #0B0F19;
+    --line: #1E293B;
+    --white: #111827;
+}
+
+body.dark-mode header {
+    background: #111827;
+    border: 1px solid var(--line);
+}
+
+body.dark-mode .filters,
+body.dark-mode .card,
+body.dark-mode .chartcard,
+body.dark-mode .insight,
+body.dark-mode .tablecard {
+    background: #111827;
+    color: #F8FAFC;
+}
+
+body.dark-mode .filter select {
+    background: #1F2937;
+    color: #F8FAFC;
+    border-color: #374151;
+}
+
+body.dark-mode th {
+    background: #1F2937;
+    color: #94A3B8;
+    border-bottom-color: var(--line);
+}
+
+body.dark-mode td {
+    border-bottom-color: #1F2937;
+}
+
+body.dark-mode tbody tr:hover {
+    background: #1F2937;
 }
