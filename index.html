@@ -1,15 +1,19 @@
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>PC Service | Controle do nível de serviço mensal</title>
-            <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link rel="icon" type="image/png" href="logo-pc.ico">
-            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-            <link rel="stylesheet" href="style.css">
-        </head>
-       <body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC Service | Controle do nível de serviço mensal</title>
+    
+    <!-- Fontes e Favicon -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/png" href="logo-montreal2.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+        
+</head>
+<body>
     <main class="wrap">
         <header>
             <div>
@@ -18,8 +22,7 @@
                 <div class="sub">Painel executivo de demanda, status operacional, prioridades e experiência do usuário.<br><span id="period">Competência: Setembro de 2026 · conforme planilha de origem</span></div>
             </div>
             <div class="headright">
-                <div class="pill"><span class="dot"></span> ✓ dados validados</div>
-                <div class="sub" style="margin-top:10px">Base agregada por localidade</div>
+                <img src="logo pc.png" alt="Logo PC-Service Montreal" height= 150px width= 250px
             </div>
         </header>
 
@@ -91,12 +94,12 @@
         </section>
 
         <div class="note">
-            <strong>Nota de qualidade e interpretação.</strong> A base contém agregados por localidade para setembro/2026. Variação percentual mensal: <strong>sem dados</strong> — falta uma série histórica comparável, com os mesmos indicadores para o mês anterior. Cumprimento de SLA: <strong>sem dados conclusivos</strong> — a planilha contém campos “% de níveis de serviço”, mas não informa a definição da métrica, a meta contratual nem o denominador; para apurar conformidade auditável, incluir chamados dentro/fora do prazo, ou tempos de atendimento/resolução e metas de SLA por prioridade. Campos numéricos vazios são tratados como ausentes, não como zero. Quando o arquivo apresenta zero explícito, ele é mantido como zero.
+            <strong>Nota de qualidade e interpretação.</strong> A base contém agregados por localidade para setembro/2026. Variação percentual mensal: <strong>sem dados</strong> — falta uma série histórica comparável, com os mesmos indicadores para o mês anterior. Cumprimento de SLA: <strong>sem dados conclusivos</strong>. Campos numéricos vazios são tratados como ausentes.
         </div>
 
         <footer class="foot">
-            <span>Fonte: arquivo Excel fornecido · valores normalizados para exibição</span>
-            <span>PC Service Tecnologia Ltda. · Uso gerencial</span>
+            <span>Desenvolvido pela equipe de Informática</span>
+            
         </footer>
     </main>
 
@@ -118,7 +121,7 @@
     function card(label, value, foot, hero = false) { return `<article class="card ${hero ? 'hero' : ''}"><div class="klabel">${label}</div><div class="kvalue">${value}</div><div class="kfoot">${foot}</div></article>`; }
     
     function render() {
-        const rows = active(), key = metric.value, title = labels[key] || key, total = sum(rows, key), totalAll = sum(DATA, key);
+        const rows = active(), key = metric.value, title = labels[key] || key, total = sum(rows, key);
         document.getElementById('kpis').innerHTML =
             card(title, fmt(total), `Dimensão selecionada · ${rows.length} de ${DATA.length} localidades`, true) +
             card('Chamados registrados', fmt(sum(rows, 'total')), 'Volume agregado da seleção') +
@@ -140,22 +143,22 @@
         } else { 
             let cursor = 0; 
             const stops = pr.map((x, i) => { const start = cursor; cursor += x.v / ptotal * 100; return `${priorityColors[i]} ${start}% ${cursor}%`; }).join(','); 
-            document.getElementById('donutArea').innerHTML = `<div class="donutwrap"><div class="donut" style="background:conic-gradient(${stops})"><div class="donutcenter"><div class="donutnum">${fmt(ptotal)}</div><div class="donutlabel">chamados</div></div></div><div class="legend">${pr.map((x, i) => `<div class="legrow"><span class="swatch" style="background:\${priorityColors[i]}"></span><span class="legname">${x.name} ·${pct(x.v / ptotal)}</span><span class="legval">\${fmt(x.v)}</span></div>`).join('')}</div></div>`; 
+            document.getElementById('donutArea').innerHTML = `<div class="donutwrap"><div class="donut" style="background:conic-gradient(${stops})"><div class="donutcenter"><div class="donutnum">${fmt(ptotal)}</div><div class="donutlabel">chamados</div></div></div><div class="legend">${pr.map((x, i) => `<div class="legrow"><span class="swatch" style="background:\${priorityColors[i]}"></span><span class="legname">${x.name} ·${pct(x.v / ptotal)}</span><span class="legval">${fmt(x.v)}</span></div>`).join('')}</div></div>`; 
         }
         
         const high = sorted.find(d => getNum(d, key) !== null), low = [...sorted].reverse().find(d => getNum(d, key) !== null);
         const pShare = ptotal ? pr[0].v / ptotal : null;
         
         document.getElementById('insights').innerHTML =
-            `<article class="insight"><div class="tag">Maior valor</div><p>${high ? `<strong>\${high.localidade}</strong> lidera em ${title.toLowerCase()} com <strong>${fmt(getNum(high, key))}</strong>.` : 'Sem dados para identificar liderança.'}</p></article>` +
+            `<article class="insight"><div class="tag">Maior valor</div><p>${high ? `<strong> ${high.localidade}</strong> lidera em ${title.toLowerCase()} com <strong>${fmt(getNum(high, key))}</strong>.` : 'Sem dados para identificar liderança.'}</p></article>` +
             `<article class="insight critical"><div class="tag">Menor valor observado</div><p>${low ? `<strong>${low.localidade}</strong> apresenta o menor valor registrado: <strong>${fmt(getNum(low, key))}</strong>. Zero explícito não significa ausência de dado.` : 'Sem dados para identificar o menor valor.'}</p></article>` +
-            `<article class="insight"><div class="tag">Prioridade alta</div><p>${pShare === null ? 'Sem dados para calcular a participação de prioridade alta.' : `Chamados de prioridade alta representam <strong>\${pct(pShare)}</strong> do volume filtrado (${fmt(pr[0].v)} de${fmt(ptotal)}).`}</p></article>`;
+            `<article class="insight"><div class="tag">Prioridade alta</div><p>${pShare === null ? 'Sem dados para calcular a participação de prioridade alta.' : `Chamados de prioridade alta representam <strong>${pct(pShare)}</strong> do volume filtrado (${fmt(pr[0].v)} de${fmt(ptotal)}).`}</p></article>`;
             
         document.getElementById('countPill').textContent = rows.length + ' localidades';
         const sumDen = total;
         const columns = [['localidade', 'Localidade'], [key, title], ['participacao', 'Participação'], ['alta', 'Alta'], ['media', 'Média'], ['baixa', 'Baixa'], ['pendente', 'Pendente'], ['atendimento', 'Em atendimento'], ['pesquisas', 'Pesquisas'], ['satisfacao', 'Média satisfação']];
         
-        document.getElementById('tableWrap').innerHTML = rows.length ? `<table><thead><tr>${columns.map(c => `<th style="${c[0] === 'localidade' ? 'text-align:left' : ''}">${c[1]}</th>`).join('')}</tr></thead><tbody>${sorted.map((d, i) => { const v = getNum(d, key), share = (sumDen && v !== null) ? v / sumDen : null; return `<tr class="\${i === 0 ? 'rank1' : ''}"><td>${i === 0 ? '<span class="rankbadge">#1</span>' : ''}${d.localidade}</td><td class="numcell">\${fmt(v)}</td><td>${pct(share)}</td><td>${fmt(getNum(d, 'alta'))}</td><td>${fmt(getNum(d, 'media'))}</td><td>${fmt(getNum(d, 'baixa'))}</td><td>${fmt(getNum(d, 'pendente'))}</td><td>${fmt(getNum(d, 'atendimento'))}</td><td>${fmt(getNum(d, 'pesquisas'))}</td><td>${fmt(getNum(d, 'satisfacao'))}</td></tr>`; }).join('')}</tbody></table>` : '<div class="empty-state">Sem dados para este filtro</div>';
+        document.getElementById('tableWrap').innerHTML = rows.length ? `<table><thead><tr>${columns.map(c => `<th style="${c[0] === 'localidade' ? 'text-align:left' : ''}">${c[1]}</th>`).join('')}</tr></thead><tbody>${sorted.map((d, i) => { const v = getNum(d, key), share = (sumDen && v !== null) ? v / sumDen : null; return `<tr class="\${i === 0 ? 'rank1' : ''}"><td>${i === 0 ? '<span class="rankbadge">#1</span>' : ''}${d.localidade}</td><td class="numcell">${fmt(v)}</td><td>${pct(share)}</td><td>${fmt(getNum(d, 'alta'))}</td><td>${fmt(getNum(d, 'media'))}</td><td>${fmt(getNum(d, 'baixa'))}</td><td>${fmt(getNum(d, 'pendente'))}</td><td>${fmt(getNum(d, 'atendimento'))}</td><td>${fmt(getNum(d, 'pesquisas'))}</td><td>${fmt(getNum(d, 'satisfacao'))}</td></tr>`; }).join('')}</tbody></table>` : '<div class="empty-state">Sem dados para este filtro</div>';
     }
     
     loc.addEventListener('change', render);
@@ -164,4 +167,4 @@
     render();
     </script>
 </body>
-        </html>
+</html>
