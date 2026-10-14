@@ -198,8 +198,33 @@ function parseTechnicianRows(rows) {
     );
     if (totalsIndex < 0) return [];
 
+    const localityNamesByCode = {
+        alm: 'Almirante Barroso',
+        rb: 'Rio Branco',
+        vz: 'Venezuela',
+        na: 'Angra',
+        bp: 'Barra do Piraí',
+        ca: 'Campos',
+        dc: 'Duque de Caxias',
+        it: 'Itaboraí',
+        ip: 'Itaperuna',
+        mc: 'Macaé',
+        ma: 'Magé',
+        ni: 'Niterói',
+        nf: 'Nova Friburgo',
+        nig: 'Nova Iguaçu',
+        pe: 'Petrópolis',
+        re: 'Resende',
+        sg: 'São Gonçalo',
+        sj: 'São João de Meriti',
+        sp: 'São Pedro da Aldeia',
+        te: 'Teresópolis',
+        tr: 'Três Rios',
+        vr: 'Volta Redonda'
+    };
     const technicians = new Map();
     let inTechnicianSection = false;
+    let currentLocality = '';
 
     for (const row of rows.slice(totalsIndex + 1)) {
         const first = normalizeCsvHeader(row[0]);
@@ -212,7 +237,12 @@ function parseTechnicianRows(rows) {
             inTechnicianSection = true;
             continue;
         }
-        if (!inTechnicianSection || isTechnicianHeader || !row[0]) continue;
+        if (!inTechnicianSection) continue;
+        if (isTechnicianHeader) {
+            currentLocality = localityNamesByCode[first] || String(row[0]).trim();
+            continue;
+        }
+        if (!row[0]) continue;
 
         const name = String(row[0]).trim();
         const total = parseCsvValue(row[1]);
@@ -229,11 +259,14 @@ function parseTechnicianRows(rows) {
         }
 
         const key = normalizeCsvHeader(name);
-        const current = technicians.get(key) || { nome: name, total: 0, alta: 0, media: 0, baixa: 0 };
+        const current = technicians.get(key) || { nome: name, total: 0, alta: 0, media: 0, baixa: 0, localidades: [] };
         current.total += total;
         current.alta += high;
         current.media += medium;
         current.baixa += low;
+        if (currentLocality && !current.localidades.includes(currentLocality)) {
+            current.localidades.push(currentLocality);
+        }
         technicians.set(key, current);
     }
 
@@ -279,7 +312,7 @@ document.getElementById('csvFile').addEventListener('change', function(event) {
 
             // 2. Atualiza o texto do subtítulo principal lá no topo
             const periodText = document.getElementById('period');
-            if (periodText) periodText.innerHTML = `Competência: <strong>${mesEncontrado}</strong> · conforme ficheiro carregado`;
+            if (periodText) periodText.innerHTML = `Competência: &nbsp;<strong>${mesEncontrado}</strong> `;
 
             // Continua com a leitura normal dos dados
             const importedData = parseCsvRows(rawRows);

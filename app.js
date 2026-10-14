@@ -27,8 +27,8 @@
         const technicianRank = [...TECH_DATA]
             .sort((a, b) => b[technicianKey] - a[technicianKey])
             .slice(0, 5);
-        const makeItems = (rank, getName, getValue) => rank.length
-            ? rank.map((row, index) => `<div class="rank-item"><span class="r-name"><b>${index + 1}º</b> ${getName(row)}</span><strong class="r-val">${fmt(getValue(row))}</strong></div>`).join('')
+        const makeItems = (rank, getName, getValue, getDetail = null) => rank.length
+            ? rank.map((row, index) => `<div class="rank-item"><span class="r-name"><b>${index + 1}º</b><span class="r-text">${getName(row)}${getDetail ? `<small class="r-detail">${getDetail(row)}</small>` : ''}</span></span><strong class="r-val">${fmt(getValue(row))}</strong></div>`).join('')
             : '<div class="empty-state">Sem dados para este ranking</div>';
 
         document.getElementById('boxRankLoc').innerHTML = `
@@ -39,7 +39,7 @@
         document.getElementById('boxRankTech').innerHTML = `
             <h3 class="chart-title">🥇 Top 5 Técnicos</h3>
             <div class="chart-sub">Por ${labels[technicianKey].toLowerCase()} · geral</div>
-            <div class="rank-list">${makeItems(technicianRank, row => row.nome, row => row[technicianKey])}</div>
+            <div class="rank-list">${makeItems(technicianRank, row => row.nome, row => row[technicianKey], row => row.localidades.join(', '))}</div>
         `;
     }
 
@@ -48,6 +48,7 @@
         const sortedTechnicians = [...TECH_DATA].sort((a, b) => b[technicianKey] - a[technicianKey]);
         const columns = [
             ['nome', 'Técnico'],
+            ['localidades', 'Localidade'],
             ['total', 'Total'],
             ['alta', 'Alta'],
             ['media', 'Média'],
@@ -60,6 +61,7 @@
                 <thead><tr>${columns.map(column => `<th style="${column[0] === 'nome' ? 'text-align:left' : ''}">${column[1]}</th>`).join('')}</tr></thead>
                 <tbody>${sortedTechnicians.map((technician, index) => `<tr class="${index === 0 ? 'rank1' : ''}">
                     <td>${index === 0 ? '<span class="rankbadge">#1</span>' : ''}${technician.nome}</td>
+                    <td>${technician.localidades.join(', ')}</td>
                     <td class="numcell">${fmt(technician.total)}</td>
                     <td>${fmt(technician.alta)}</td>
                     <td>${fmt(technician.media)}</td>

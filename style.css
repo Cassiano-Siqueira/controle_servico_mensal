@@ -46,6 +46,19 @@ header {
     box-shadow: 0 10px 28px #0f172a18;
 }
 
+/* Destaque da linha de Competência no Header */
+#period {
+    display: flex;
+    position: relative;
+    top: 14px;
+    margin-top: 90px;
+    font-size: 30px;
+    line-height: 1.4;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0px;
+}
+
 .eyebrow {
     text-transform: uppercase;
     letter-spacing: .13em;
@@ -667,11 +680,18 @@ body.dark-mode .theme-btn:hover {
     gap: 14px;
     margin-top: 14px;
 }
+.rankings-grid > .chartcard {
+    display: flex;
+    flex-direction: column;
+}
 .rank-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-top: 12px;
+}
+.rankings-grid .rank-list {
+    flex: 1;
 }
 .rank-item {
     display: flex;
@@ -681,19 +701,36 @@ body.dark-mode .theme-btn:hover {
     border-radius: 8px;
     font-size: 12px;
 }
+.rankings-grid .rank-item {
+    flex: 1 1 0;
+}
 body.dark-mode .rank-item {
     background: #1F2937;
 }
 .r-name {
+    display: flex;
+    align-items: flex-start;
     color: var(--slate);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     padding-right: 10px;
 }
+.r-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.r-detail {
+    color: var(--slate);
+    font-size: 11px;
+    font-weight: 400;
+    white-space: normal;
+}
 .r-name b {
     color: var(--ink);
     margin-right: 6px;
+    flex: 0 0 auto;
 }
 body.dark-mode .r-name b {
     color: #F8FAFC;
