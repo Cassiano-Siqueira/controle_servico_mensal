@@ -10,7 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" type="image/png" href="logo-montreal2.ico">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>   
         
 </head>
 <body>
@@ -26,6 +27,17 @@
                 <div style="margin-top: 10px;">
                     <button class="theme-btn" id="themeToggle" type="button">🌙 Modo Escuro</button>
                 </div>
+               
+             <div class="filter">
+              
+                <div style="margin-top: 4px;">
+                    <label for="csvFile" class="theme-btn" style="display: inline-block; text-align: center; cursor: pointer; width: 100%;">
+                        📁 Selecionar Ficheiro CSV
+                    </label>
+                    <input type="file" id="csvFile" accept=".csv" style="display: none;">
+                </div>
+            </div>
+
             </div>
         </header>
 
@@ -106,8 +118,7 @@
         </footer>
     </main>
 
-      <script src="data.js"></script>
-
+    <script src="data.js"></script>
     <script src="app.js" defer></script>
 
 </body>

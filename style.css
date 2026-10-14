@@ -616,3 +616,13 @@ body.dark-mode td {
 body.dark-mode tbody tr:hover {
     background: #1F2937;
 }
+
+body.dark-mode .theme-btn {
+    border-color: #374151;
+    color: #F8FAFC;
+    background: #1F2937;
+}
+
+body.dark-mode .theme-btn:hover {
+    background: #374151;
+}
