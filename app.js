@@ -8,7 +8,13 @@
     
     const getNum = (d, k) => d[k] === null || d[k] === undefined || !Number.isFinite(Number(d[k])) ? null : Number(d[k]);
     function sum(arr, k) { const vals = arr.map(d => getNum(d, k)).filter(v => v !== null); return vals.length ? vals.reduce((a, b) => a + b, 0) : null; }
-    function avg(arr, k) { const vals = arr.map(d => getNum(d, k)).filter(v => v !== null); return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null; }
+    function averageSatisfaction(arr) {
+        const surveyed = arr.filter(row => getNum(row, 'pesquisas') > 0 && getNum(row, 'satisfacao') !== null);
+        const surveyCount = sum(surveyed, 'pesquisas');
+        return surveyCount
+            ? surveyed.reduce((total, row) => total + getNum(row, 'satisfacao') * getNum(row, 'pesquisas'), 0) / surveyCount
+            : null;
+    }
     function active() { return DATA.filter(d => loc.value === '__all' || d.localidade === loc.value); }
     function card(label, value, foot, hero = false) { return `<article class="card ${hero ? 'hero' : ''}"><div class="klabel">${label}</div><div class="kvalue">${value}</div><div class="kfoot">${foot}</div></article>`; }
 
@@ -64,7 +70,12 @@
     }
     
     function render() {
-        const rows = active(), key = metric.value, title = labels[key] || key, total = sum(rows, key);
+        const rows = active(), key = metric.value, title = labels[key] || key, total = key === 'satisfacao' ? null : sum(rows, key);
+
+        const surveyCount = sum(rows, 'pesquisas');
+        document.getElementById('kpis').innerHTML =
+            card('Chamados registrados', fmt(sum(rows, 'total')), `${rows.length} localidades no filtro`, true) +
+            card('Satisfação média', fmt(averageSatisfaction(rows)), `${fmt(surveyCount)} pesquisas consideradas`);
     
         document.getElementById('barTitle').textContent = title + ' por localidade';
         document.getElementById('barSub').textContent = 'Comparativo ordenado · ' + title.toLowerCase() + ' · escala iniciada em zero';
@@ -81,7 +92,7 @@
         } else { 
             let cursor = 0; 
             const stops = pr.map((x, i) => { const start = cursor; cursor += x.v / ptotal * 100; return `${priorityColors[i]} ${start}% ${cursor}%`; }).join(','); 
-            document.getElementById('donutArea').innerHTML = `<div class="donutwrap"><div class="donut" style="background:conic-gradient(${stops})"><div class="donutcenter"><div class="donutnum">${fmt(ptotal)}</div><div class="donutlabel">chamados</div></div></div><div class="legend">${pr.map((x, i) => `<div class="legrow"><span class="swatch" style="background:\${priorityColors[i]}"></span><span class="legname">${x.name} ·${pct(x.v / ptotal)}</span><span class="legval">${fmt(x.v)}</span></div>`).join('')}</div></div>`; 
+            document.getElementById('donutArea').innerHTML = `<div class="donutwrap"><div class="donut" style="background:conic-gradient(${stops})"><div class="donutcenter"><div class="donutnum">${fmt(ptotal)}</div><div class="donutlabel">chamados</div></div></div><div class="legend">${pr.map((x, i) => `<div class="legrow"><span class="swatch" style="background:${priorityColors[i]}"></span><span class="legname">${x.name} ·${pct(x.v / ptotal)}</span><span class="legval">${fmt(x.v)}</span></div>`).join('')}</div></div>`;
         }
         
         const high = sorted.find(d => getNum(d, key) !== null), low = [...sorted].reverse().find(d => getNum(d, key) !== null);
@@ -94,8 +105,9 @@
             
         document.getElementById('countPill').textContent = rows.length + ' localidades';
         const sumDen = total;
-        const columns = [['localidade', 'Localidade'], [key, title], ['participacao', 'Participação'], ['alta', 'Alta'], ['media', 'Média'], ['baixa', 'Baixa'], ['pendente', 'Pendente'], ['incidentes', 'Incidentes'], ['requisicoes', 'Requisições'], ['satisfacao', 'Média satisfação']];        
-        document.getElementById('tableWrap').innerHTML = rows.length ? `<table><thead><tr>${columns.map(c => `<th style="${c[0] === 'localidade' ? 'text-align:left' : ''}">${c[1]}</th>`).join('')}</tr></thead><tbody>${sorted.map((d, i) => { const v = getNum(d, key), share = (sumDen && v !== null) ? v / sumDen : null; return `<tr class="\${i === 0 ? 'rank1' : ''}"><td>${i === 0 ? '<span class="rankbadge">#1</span>' : ''}${d.localidade}</td><td class="numcell">\${fmt(v)}</td><td>${pct(share)}</td><td>${fmt(getNum(d, 'alta'))}</td><td>${fmt(getNum(d, 'media'))}</td><td>${fmt(getNum(d, 'baixa'))}</td><td>${fmt(getNum(d, 'pendente'))}</td><td>${fmt(getNum(d, 'incidentes'))}</td><td>${fmt(getNum(d, 'requisicoes'))}</td><td>${fmt(getNum(d, 'satisfacao'))}</td></tr>`; }).join('')}</tbody></table>` : '<div class="empty-state">Sem dados para este filtro</div>';        renderRankings(rows, key, title);
+        const columns = [['localidade', 'Localidade'], [key, title], ['participacao', 'Participação'], ['alta', 'Alta'], ['media', 'Média'], ['baixa', 'Baixa'], ['pendente', 'Pendente'], ['incidentes', 'Incidentes'], ['requisicoes', 'Requisições'], ['satisfacao', 'Média satisfação']];
+        document.getElementById('tableWrap').innerHTML = rows.length ? `<table><thead><tr>${columns.map(c => `<th style="${c[0] === 'localidade' ? 'text-align:left' : ''}">${c[1]}</th>`).join('')}</tr></thead><tbody>${sorted.map((d, i) => { const v = getNum(d, key), share = (key !== 'satisfacao' && sumDen && v !== null) ? v / sumDen : null; return `<tr class="${i === 0 ? 'rank1' : ''}"><td>${i === 0 ? '<span class="rankbadge">#1</span>' : ''}${d.localidade}</td><td class="numcell">${fmt(v)}</td><td>${key === 'satisfacao' ? '—' : pct(share)}</td><td>${fmt(getNum(d, 'alta'))}</td><td>${fmt(getNum(d, 'media'))}</td><td>${fmt(getNum(d, 'baixa'))}</td><td>${fmt(getNum(d, 'pendente'))}</td><td>${fmt(getNum(d, 'incidentes'))}</td><td>${fmt(getNum(d, 'requisicoes'))}</td><td>${fmt(getNum(d, 'satisfacao'))}</td></tr>`; }).join('')}</tbody></table>` : '<div class="empty-state">Sem dados para este filtro</div>';
+        renderRankings(rows, key, title);
         renderTechnicianTable(key);
     }
     
