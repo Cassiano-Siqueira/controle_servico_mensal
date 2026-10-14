@@ -36,6 +36,32 @@
             <div class="rank-list">${makeItems(technicianRank, row => row.nome, row => row[technicianKey])}</div>
         `;
     }
+
+    function renderTechnicianTable(key) {
+        const technicianKey = ['total', 'alta', 'media', 'baixa'].includes(key) ? key : 'total';
+        const sortedTechnicians = [...TECH_DATA].sort((a, b) => b[technicianKey] - a[technicianKey]);
+        const columns = [
+            ['nome', 'Técnico'],
+            ['total', 'Total'],
+            ['alta', 'Alta'],
+            ['media', 'Média'],
+            ['baixa', 'Baixa']
+        ];
+
+        document.getElementById('countPillTech').textContent = `${TECH_DATA.length} técnicos`;
+        document.getElementById('tableWrapTech').innerHTML = sortedTechnicians.length
+            ? `<table>
+                <thead><tr>${columns.map(column => `<th style="${column[0] === 'nome' ? 'text-align:left' : ''}">${column[1]}</th>`).join('')}</tr></thead>
+                <tbody>${sortedTechnicians.map((technician, index) => `<tr class="${index === 0 ? 'rank1' : ''}">
+                    <td>${index === 0 ? '<span class="rankbadge">#1</span>' : ''}${technician.nome}</td>
+                    <td class="numcell">${fmt(technician.total)}</td>
+                    <td>${fmt(technician.alta)}</td>
+                    <td>${fmt(technician.media)}</td>
+                    <td>${fmt(technician.baixa)}</td>
+                </tr>`).join('')}</tbody>
+            </table>`
+            : '<div class="empty-state">Sem dados de técnicos</div>';
+    }
     
     function render() {
         const rows = active(), key = metric.value, title = labels[key] || key, total = sum(rows, key);
@@ -68,15 +94,15 @@
             
         document.getElementById('countPill').textContent = rows.length + ' localidades';
         const sumDen = total;
-        const columns = [['localidade', 'Localidade'], [key, title], ['participacao', 'Participação'], ['alta', 'Alta'], ['media', 'Média'], ['baixa', 'Baixa'], ['pendente', 'Pendente'], ['atendimento', 'Em atendimento'], ['pesquisas', 'Pesquisas'], ['satisfacao', 'Média satisfação']];
-        
-        document.getElementById('tableWrap').innerHTML = rows.length ? `<table><thead><tr>${columns.map(c => `<th style="${c[0] === 'localidade' ? 'text-align:left' : ''}">${c[1]}</th>`).join('')}</tr></thead><tbody>${sorted.map((d, i) => { const v = getNum(d, key), share = (sumDen && v !== null) ? v / sumDen : null; return `<tr class="\${i === 0 ? 'rank1' : ''}"><td>${i === 0 ? '<span class="rankbadge">#1</span>' : ''}${d.localidade}</td><td class="numcell">${fmt(v)}</td><td>${pct(share)}</td><td>${fmt(getNum(d, 'alta'))}</td><td>${fmt(getNum(d, 'media'))}</td><td>${fmt(getNum(d, 'baixa'))}</td><td>${fmt(getNum(d, 'pendente'))}</td><td>${fmt(getNum(d, 'atendimento'))}</td><td>${fmt(getNum(d, 'pesquisas'))}</td><td>${fmt(getNum(d, 'satisfacao'))}</td></tr>`; }).join('')}</tbody></table>` : '<div class="empty-state">Sem dados para este filtro</div>';
-        renderRankings(rows, key, title);
+        const columns = [['localidade', 'Localidade'], [key, title], ['participacao', 'Participação'], ['alta', 'Alta'], ['media', 'Média'], ['baixa', 'Baixa'], ['pendente', 'Pendente'], ['incidentes', 'Incidentes'], ['requisicoes', 'Requisições'], ['satisfacao', 'Média satisfação']];        
+        document.getElementById('tableWrap').innerHTML = rows.length ? `<table><thead><tr>${columns.map(c => `<th style="${c[0] === 'localidade' ? 'text-align:left' : ''}">${c[1]}</th>`).join('')}</tr></thead><tbody>${sorted.map((d, i) => { const v = getNum(d, key), share = (sumDen && v !== null) ? v / sumDen : null; return `<tr class="\${i === 0 ? 'rank1' : ''}"><td>${i === 0 ? '<span class="rankbadge">#1</span>' : ''}${d.localidade}</td><td class="numcell">\${fmt(v)}</td><td>${pct(share)}</td><td>${fmt(getNum(d, 'alta'))}</td><td>${fmt(getNum(d, 'media'))}</td><td>${fmt(getNum(d, 'baixa'))}</td><td>${fmt(getNum(d, 'pendente'))}</td><td>${fmt(getNum(d, 'incidentes'))}</td><td>${fmt(getNum(d, 'requisicoes'))}</td><td>${fmt(getNum(d, 'satisfacao'))}</td></tr>`; }).join('')}</tbody></table>` : '<div class="empty-state">Sem dados para este filtro</div>';        renderRankings(rows, key, title);
+        renderTechnicianTable(key);
     }
     
     loc.addEventListener('change', render);
     metric.addEventListener('change', render);
     document.getElementById('clearBtn').addEventListener('click', () => { loc.value = '__all'; metric.value = 'total'; render(); });
+
     render();
 
     // Lógica de Modo Escuro (Adaptada para JS Puro)
