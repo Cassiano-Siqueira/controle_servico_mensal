@@ -626,3 +626,91 @@ body.dark-mode .theme-btn {
 body.dark-mode .theme-btn:hover {
     background: #374151;
 }
+
+/* Responsividade para Telemóveis e Ecrãs Pequenos */
+@media (max-width: 768px) {
+    body {
+        padding: 10px; /* Reduz as margens laterais da página */
+    }
+
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .headright {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Transforma a grelha de KPIs numa coluna única */
+    .kpis {
+        grid-template-columns: 1fr;
+    }
+
+    /* Empilha os filtros verticalmente */
+    .filters {
+        flex-direction: column;
+    }
+
+    .filter {
+        width: 100%;
+    }
+
+    /* Transforma a grelha de Insights numa coluna única */
+    .insights {
+        grid-template-columns: 1fr;
+    }
+
+    /* Permite scroll horizontal na tabela grande para não partir o layout */
+    .tablecard {
+        overflow-x: auto;
+    }
+}
+
+/* Rankings de Localidades e Técnicos */
+.rankings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 14px;
+    margin-top: 14px;
+}
+.rank-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+.rank-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 11px 14px;
+    background: #F8FAFC;
+    border-radius: 8px;
+    font-size: 12px;
+}
+body.dark-mode .rank-item {
+    background: #1F2937;
+}
+.r-name {
+    color: var(--slate);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 10px;
+}
+.r-name b {
+    color: var(--ink);
+    margin-right: 6px;
+}
+body.dark-mode .r-name b {
+    color: #F8FAFC;
+}
+.r-val {
+    font-variant-numeric: tabular-nums;
+    color: var(--blue);
+    font-weight: 800;
+}

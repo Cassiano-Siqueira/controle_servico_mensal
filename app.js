@@ -11,6 +11,31 @@
     function avg(arr, k) { const vals = arr.map(d => getNum(d, k)).filter(v => v !== null); return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null; }
     function active() { return DATA.filter(d => loc.value === '__all' || d.localidade === loc.value); }
     function card(label, value, foot, hero = false) { return `<article class="card ${hero ? 'hero' : ''}"><div class="klabel">${label}</div><div class="kvalue">${value}</div><div class="kfoot">${foot}</div></article>`; }
+
+    function renderRankings(rows, key, title) {
+        const localRank = [...rows]
+            .filter(row => getNum(row, key) !== null)
+            .sort((a, b) => getNum(b, key) - getNum(a, key))
+            .slice(0, 5);
+        const technicianKey = ['total', 'alta', 'media', 'baixa'].includes(key) ? key : 'total';
+        const technicianRank = [...TECH_DATA]
+            .sort((a, b) => b[technicianKey] - a[technicianKey])
+            .slice(0, 5);
+        const makeItems = (rank, getName, getValue) => rank.length
+            ? rank.map((row, index) => `<div class="rank-item"><span class="r-name"><b>${index + 1}º</b> ${getName(row)}</span><strong class="r-val">${fmt(getValue(row))}</strong></div>`).join('')
+            : '<div class="empty-state">Sem dados para este ranking</div>';
+
+        document.getElementById('boxRankLoc').innerHTML = `
+            <h3 class="chart-title">🏆 Top 5 Localidades</h3>
+            <div class="chart-sub">Filtrado por ${title.toLowerCase()}</div>
+            <div class="rank-list">${makeItems(localRank, row => row.localidade, row => getNum(row, key))}</div>
+        `;
+        document.getElementById('boxRankTech').innerHTML = `
+            <h3 class="chart-title">🥇 Top 5 Técnicos</h3>
+            <div class="chart-sub">Por ${labels[technicianKey].toLowerCase()} · geral</div>
+            <div class="rank-list">${makeItems(technicianRank, row => row.nome, row => row[technicianKey])}</div>
+        `;
+    }
     
     function render() {
         const rows = active(), key = metric.value, title = labels[key] || key, total = sum(rows, key);
@@ -46,6 +71,7 @@
         const columns = [['localidade', 'Localidade'], [key, title], ['participacao', 'Participação'], ['alta', 'Alta'], ['media', 'Média'], ['baixa', 'Baixa'], ['pendente', 'Pendente'], ['atendimento', 'Em atendimento'], ['pesquisas', 'Pesquisas'], ['satisfacao', 'Média satisfação']];
         
         document.getElementById('tableWrap').innerHTML = rows.length ? `<table><thead><tr>${columns.map(c => `<th style="${c[0] === 'localidade' ? 'text-align:left' : ''}">${c[1]}</th>`).join('')}</tr></thead><tbody>${sorted.map((d, i) => { const v = getNum(d, key), share = (sumDen && v !== null) ? v / sumDen : null; return `<tr class="\${i === 0 ? 'rank1' : ''}"><td>${i === 0 ? '<span class="rankbadge">#1</span>' : ''}${d.localidade}</td><td class="numcell">${fmt(v)}</td><td>${pct(share)}</td><td>${fmt(getNum(d, 'alta'))}</td><td>${fmt(getNum(d, 'media'))}</td><td>${fmt(getNum(d, 'baixa'))}</td><td>${fmt(getNum(d, 'pendente'))}</td><td>${fmt(getNum(d, 'atendimento'))}</td><td>${fmt(getNum(d, 'pesquisas'))}</td><td>${fmt(getNum(d, 'satisfacao'))}</td></tr>`; }).join('')}</tbody></table>` : '<div class="empty-state">Sem dados para este filtro</div>';
+        renderRankings(rows, key, title);
     }
     
     loc.addEventListener('change', render);

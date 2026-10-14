@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PC Service | Controle do nível de serviço mensal</title>
+
     
-    <!-- Fontes e Favicon -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" type="image/png" href="logo-montreal2.ico">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>   
-        
 </head>
 <body>
     <main class="wrap">
@@ -27,18 +25,19 @@
                 <div style="margin-top: 10px;">
                     <button class="theme-btn" id="themeToggle" type="button">🌙 Modo Escuro</button>
                 </div>
-               
+
              <div class="filter">
-              
+
                 <div style="margin-top: 4px;">
-                    <label for="csvFile" class="theme-btn" style="display: inline-block; text-align: center; cursor: pointer; width: 100%;">
+                    <label for="csvFile" class="theme-btn" id="fileBtnLabel" style="display: inline-block; text-align: center; cursor: pointer; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                         📁 Selecionar Ficheiro CSV
                     </label>
                     <input type="file" id="csvFile" accept=".csv" style="display: none;">
                 </div>
             </div>
 
-            </div>
+
+                </div>
         </header>
 
         <section class="filters" aria-label="Filtros do dashboard">
@@ -70,11 +69,18 @@
                 </select>
             </div>
             <button class="btn" id="clearBtn" type="button">↺ Limpar filtros</button>
+
+
+        </section>
+        
+        <section class="rankings-grid">
+            <div class="chartcard" id="boxRankLoc"></div>
+            <div class="chartcard" id="boxRankTech"></div>
         </section>
 
         <div class="sectionhead">
             <div>
-                <h2 class="h2">Resumo executivo</h2>
+               <h2>Resumo Executivo <span id="mesIndicador" style="font-size: 14px; font-weight: normal; color: var(--slate); margin-left: 10px;"></span></h2>
                 <div class="sectionnote">Todos os indicadores, gráficos, insights e ranking acompanham os filtros ativos.</div>
             </div>
         </div>
