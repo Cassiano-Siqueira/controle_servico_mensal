@@ -146,3 +146,7 @@ themeToggle.addEventListener('click', () => {
     // Guarda a preferência no armazenamento local do navegador
     localStorage.setItem('colorSchemeOverride', isDark ? 'dark' : 'light');
 });
+
+document.getElementById('generatePdf').addEventListener('click', () => {
+    window.print();
+});

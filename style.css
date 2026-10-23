@@ -573,6 +573,12 @@ tbody tr.rank1 td:first-child { font-weight: 800; color: var(--navy); }
     transform: translateY(-1px);
 }
 
+.head-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
 /* Variáveis e Cores do Modo Escuro */
 body.dark-mode {
     --navy: #3B82F6;
@@ -646,6 +652,11 @@ body.dark-mode .theme-btn:hover {
         display: flex;
         flex-direction: column;
         gap: 8px;
+    }
+
+    .head-actions {
+        justify-content: flex-start;
+        flex-wrap: wrap;
     }
 
     /* Transforma a grelha de KPIs numa coluna única */
@@ -784,4 +795,93 @@ body.dark-mode .glossary-box h4 {
 
 body.dark-mode .g-item strong {
     color: #F8FAFC;
+}
+
+@page {
+    size: A4 landscape;
+    margin: 10mm;
+}
+
+@media print {
+    html,
+    body {
+        width: 100%;
+        background: var(--bg);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .wrap {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .head-actions,
+    header .filter,
+    .filters {
+        display: none !important;
+    }
+
+    header {
+        box-shadow: none;
+        break-inside: avoid;
+    }
+
+    .kpis {
+        grid-template-columns: 2fr 1fr;
+    }
+
+    .hero {
+        grid-column: auto;
+    }
+
+    .grid2 {
+        grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+        break-inside: avoid;
+    }
+
+    .insights {
+        grid-template-columns: repeat(3, 1fr);
+        break-inside: avoid;
+    }
+
+    .rankings-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        break-inside: avoid;
+    }
+
+    .card,
+    .chartcard,
+    .insight {
+        break-inside: avoid;
+    }
+
+    .tablecard {
+        overflow: visible;
+    }
+
+    .tablewrap {
+        max-height: none;
+        overflow: visible;
+    }
+
+    thead {
+        display: table-header-group;
+        position: static;
+    }
+
+    th:first-child,
+    td:first-child {
+        position: static;
+    }
+
+    table {
+        font-size: 8px;
+        white-space: normal;
+    }
+
+    tr {
+        break-inside: avoid;
+    }
 }
