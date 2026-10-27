@@ -79,32 +79,34 @@
             <div class="chartcard" id="boxRankTech"></div>
         </section>
 
-        <div class="sectionhead">
-            <div>
-               <h2>Resumo Executivo <span id="mesIndicador" style="font-size: 14px; font-weight: normal; color: var(--slate); margin-left: 10px;"></span></h2>
-                <div class="sectionnote">Todos os indicadores, gráficos, insights e ranking acompanham os filtros ativos.</div>
+        <section class="executive-summary">
+            <div class="sectionhead">
+                <div>
+                   <h2>Resumo Executivo <span id="mesIndicador" style="font-size: 14px; font-weight: normal; color: var(--slate); margin-left: 10px;"></span></h2>
+                    <div class="sectionnote">Todos os indicadores, gráficos, insights e ranking acompanham os filtros ativos.</div>
+                </div>
             </div>
-        </div>
 
-        <section class="kpis" id="kpis"></section>
+            <section class="kpis" id="kpis"></section>
 
-        <section class="grid2">
-            <div class="chartcard">
-                <h3 class="chart-title" id="barTitle">Chamados por localidade</h3>
-                <div class="chart-sub" id="barSub">Comparativo ordenado · maiores valores primeiro · escala iniciada em zero</div>
-                <div id="bars" class="bars"></div>
-                <div class="zero-note">Escala linear iniciada em zero. Exibidas as 10 localidades de maior valor; o ranking completo está abaixo.</div>
-            </div>
-            <div class="chartcard">
-                <h3 class="chart-title">Composição por prioridade</h3>
-                <div class="chart-sub">Participação no volume filtrado de chamados registrados.</div>
-                <div id="donutArea"></div>
-            </div>
+            <section class="grid2">
+                <div class="chartcard">
+                    <h3 class="chart-title" id="barTitle">Chamados por localidade</h3>
+                    <div class="chart-sub" id="barSub">Comparativo ordenado · maiores valores primeiro · escala iniciada em zero</div>
+                    <div id="bars" class="bars"></div>
+                    <div class="zero-note">Escala linear iniciada em zero. Exibidas as 10 localidades de maior valor; o ranking completo está abaixo.</div>
+                </div>
+                <div class="chartcard">
+                    <h3 class="chart-title">Composição por prioridade</h3>
+                    <div class="chart-sub">Participação no volume filtrado de chamados registrados.</div>
+                    <div id="donutArea"></div>
+                </div>
+            </section>
+
+            <section class="insights" id="insights"></section>
         </section>
 
-        <section class="insights" id="insights"></section>
-
-        <section class="tablecard">
+        <section class="tablecard locality-ranking">
             <div class="tabletop">
                 <div>
                     <h2 class="h2">Ranking de localidades</h2>
@@ -131,7 +133,7 @@
             <h4><span style="font-size: 16px;">📖</span> Glossário de Indicadores</h4>
             <div class="glossary-grid">
                 <div class="g-item">
-                    <strong>Incidente:</strong> Interrupção não planeada ou redução da qualidade de um serviço de TI (ex: sistema inoperante, equipamento com defeito).
+                    <strong>Incidente:</strong> Interrupção não planejada ou redução da qualidade de um serviço de Informática (ex: sistema inoperante, equipamento com defeito).
                 </div>
                 <div class="g-item">
                     <strong>Requisição:</strong> Pedido formal de um utilizador para o fornecimento de um serviço, informação ou acesso (ex: criação de credenciais, instalação de software).
@@ -140,7 +142,7 @@
                     <strong>Status Operacional:</strong> <i>Pendente</i> (aguarda ação ou terceiros), <i>Em Atendimento</i> (em tratamento técnico) e <i>Solucionado/Fechado</i> (resolvido e validado).
                 </div>
                 <div class="g-item">
-                    <strong>Índice de Satisfação:</strong> Avaliação de 1 a 5 atribuída pelo utilizador ao encerramento do chamado, refletindo a perceção de qualidade do serviço prestado.
+                    <strong>Índice de Satisfação:</strong> Avaliação de 1 a 5 atribuída pelo utilizador ao encerramento do chamado, refletindo a percepção de qualidade do serviço prestado.
                 </div>
              </div>
            </div>

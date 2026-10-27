@@ -824,30 +824,169 @@ body.dark-mode .g-item strong {
     }
 
     header {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
         box-shadow: none;
         break-inside: avoid;
     }
 
+    header > div:first-child {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .headright {
+        display: block;
+        flex: 0 0 250px;
+        width: auto;
+        min-width: 250px;
+        margin-top: 0;
+        text-align: right;
+    }
+
+    .headright img {
+        display: block;
+        width: 250px;
+        height: 150px;
+        margin-left: auto;
+        object-fit: contain;
+    }
+
     .kpis {
         grid-template-columns: 2fr 1fr;
+        gap: 6px;
+    }
+
+    .card {
+        padding: 8px;
+    }
+
+    .kvalue {
+        margin: 4px 0;
+        font-size: 24px;
     }
 
     .hero {
         grid-column: auto;
+        padding: 10px;
+    }
+
+    .hero .kvalue {
+        font-size: 30px;
+    }
+
+    .executive-summary {
+        display: grid;
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        gap: 6px;
+        height: 190mm;
+        break-before: page;
+        break-after: page;
+        break-inside: avoid;
+    }
+
+    .executive-summary .sectionhead {
+        margin: 0;
+    }
+
+    .executive-summary .kpis,
+    .executive-summary .grid2,
+    .executive-summary .insights {
+        margin: 0;
     }
 
     .grid2 {
         grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+        gap: 6px;
         break-inside: avoid;
+    }
+
+    .executive-summary > .grid2,
+    .executive-summary > .grid2 > .chartcard {
+        min-height: 0;
+    }
+
+    .chartcard {
+        padding: 10px;
+    }
+
+    .executive-summary > .grid2 > .chartcard {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chart-sub {
+        margin-bottom: 6px;
+    }
+
+    .bars {
+        flex: 1;
+        gap: 4px;
+        justify-content: space-between;
+    }
+
+    .barrow {
+        grid-template-columns: minmax(90px, 130px) 1fr 44px;
+        gap: 6px;
+    }
+
+    .track {
+        height: 10px;
+    }
+
+    .zero-note {
+        margin-top: 6px;
+        padding-top: 5px;
+    }
+
+    .donutwrap {
+        gap: 10px;
+        padding: 2px 0;
+    }
+
+    #donutArea {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .donut {
+        width: 110px;
+        height: 110px;
+    }
+
+    .donut:after {
+        inset: 22px;
+    }
+
+    .legend {
+        gap: 6px;
     }
 
     .insights {
         grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
         break-inside: avoid;
+    }
+
+    .insight {
+        padding: 8px 10px;
+    }
+
+    .insight p {
+        margin-top: 4px;
+        font-size: 11px;
+        line-height: 1.3;
     }
 
     .rankings-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 0;
+        break-after: page;
         break-inside: avoid;
     }
 
@@ -859,11 +998,35 @@ body.dark-mode .g-item strong {
 
     .tablecard {
         overflow: visible;
+        margin-top: 0;
+        break-before: page;
+    }
+
+    .locality-ranking {
+        display: flex;
+        flex-direction: column;
+        height: 190mm;
+        break-after: page;
+        break-inside: avoid;
+    }
+
+    .tabletop {
+        padding: 6px 8px;
+    }
+
+    .locality-ranking .tabletop {
+        flex: 0 0 auto;
     }
 
     .tablewrap {
         max-height: none;
         overflow: visible;
+    }
+
+    .locality-ranking .tablewrap {
+        display: flex;
+        flex: 1 1 auto;
+        min-height: 0;
     }
 
     thead {
@@ -877,11 +1040,39 @@ body.dark-mode .g-item strong {
     }
 
     table {
-        font-size: 8px;
+        font-size: 7px;
         white-space: normal;
+    }
+
+    .locality-ranking table {
+        height: 100%;
+        table-layout: fixed;
+    }
+
+    th,
+    td {
+        padding: 3px 5px;
     }
 
     tr {
         break-inside: avoid;
+    }
+
+    .glossary-box {
+        margin-top: 8px;
+        padding: 10px 12px;
+        break-inside: avoid;
+    }
+
+    .glossary-box h4 {
+        margin-bottom: 6px;
+    }
+
+    .glossary-grid {
+        gap: 6px 12px;
+    }
+
+    .foot {
+        display: none;
     }
 }
