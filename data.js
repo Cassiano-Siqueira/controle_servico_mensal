@@ -64,6 +64,52 @@ function parseCsvValue(value) {
     return Number.isFinite(number) ? number : value;
 }
 
+function findCsvHeaderIndex(rows) {
+    return rows.findIndex(row =>
+        row.some(value => normalizeCsvHeader(value) === 'localidade')
+    );
+}
+
+function extractCsvCompetence(rows) {
+    const headerIndex = findCsvHeaderIndex(rows);
+    if (headerIndex < 0) return null;
+
+    const months = [
+        'janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho',
+        'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+    ];
+    const monthPattern = months.join('|');
+    const metadata = normalizeCsvHeader(rows.slice(0, headerIndex)
+        .map(row => row.join(' '))
+        .join(' '));
+    const namedCompetence = metadata.match(
+        new RegExp(`\\b(${monthPattern})\\b\\s*(?:de\\s*)?(\\d{4})\\b`)
+    );
+    const reversedCompetence = metadata.match(
+        new RegExp(`\\b(\\d{4})\\s+(${monthPattern})\\b`)
+    );
+    const monthFirstDate = metadata.match(/\b(0?[1-9]|1[0-2])\s*[/-]\s*(\d{4})\b/);
+    const yearFirstDate = metadata.match(/\b(\d{4})\s*[/-]\s*(0?[1-9]|1[0-2])\b/);
+    const monthIndex = namedCompetence
+        ? months.indexOf(namedCompetence[1])
+        : reversedCompetence
+            ? months.indexOf(reversedCompetence[2])
+            : monthFirstDate
+                ? Number(monthFirstDate[1]) - 1
+                : yearFirstDate
+                    ? Number(yearFirstDate[2]) - 1
+                    : -1;
+    const year = namedCompetence?.[2]
+        || reversedCompetence?.[1]
+        || monthFirstDate?.[2]
+        || yearFirstDate?.[1];
+
+    if (monthIndex < 0 || !year) return null;
+
+    const monthName = months[monthIndex];
+    return `${monthName[0].toUpperCase()}${monthName.slice(1)} de ${year}`;
+}
+
 function parseCsvText(text) {
     let semicolonCount = 0;
     let commaCount = 0;
@@ -149,17 +195,13 @@ function decodeCsvFile(file) {
 }
 
 function parseCsvRows(rows) {
-    const headerLocation = rows.reduce((found, row, rowIndex) => {
-        if (found) return found;
-        const columnIndex = row.findIndex(value => normalizeCsvHeader(value) === 'localidade');
-        return columnIndex < 0 ? null : { rowIndex, columnIndex };
-    }, null);
-    if (!headerLocation) {
+    const headerIndex = findCsvHeaderIndex(rows);
+    if (headerIndex < 0) {
         throw new Error('Não encontrei a coluna LOCALIDADE no CSV.');
     }
 
-    const { rowIndex: headerIndex, columnIndex: localityIndex } = headerLocation;
     const headerRow = rows[headerIndex];
+    const localityIndex = headerRow.findIndex(value => normalizeCsvHeader(value) === 'localidade');
     const hasGroupedHeaders = normalizeCsvHeader(headerRow[localityIndex + 1]) === 'chamados registrados';
     let columns;
     let dataStart;
@@ -286,38 +328,18 @@ document.getElementById('csvFile').addEventListener('change', function(event) {
     decodeCsvFile(file)
         .then(text => {
             const rawRows = parseCsvText(text);
-            
-            // 🌟 SOLUÇÃO DEFINITIVA: Lê a segunda linha e ignora os pontos e vírgulas vazios!
-            let mesEncontrado = "Mês atual"; 
-            
-            // Verifica se a segunda linha (índice 1) existe
-            if (rawRows.length > 1 && rawRows[1]) {
-                // Pega na linha 2 e filtra apenas as células que têm texto escrito
-                const celulasPreenchidas = rawRows[1].filter(celula => celula.trim() !== '');
-                
-                if (celulasPreenchidas.length > 0) {
-                    // Se encontrar o mês e o ano (ex: "Outubro" e "2026"), junta os dois
-                    if (celulasPreenchidas.length >= 2) {
-                        mesEncontrado = `${celulasPreenchidas[0].trim()} de ${celulasPreenchidas[1].trim()}`;
-                    } else {
-                        // Se por acaso só tiver o mês
-                        mesEncontrado = celulasPreenchidas[0].trim();
-                    }
-                }
-            }
-
-            // 1. Atualiza o texto ao lado de "Resumo Executivo"
-            const indicador = document.getElementById('mesIndicador');
-            if (indicador) indicador.textContent = `(${mesEncontrado})`;
-
-            // 2. Atualiza o texto do subtítulo principal lá no topo
-            const periodText = document.getElementById('period');
-            if (periodText) periodText.innerHTML = `Competência: &nbsp;<strong>${mesEncontrado}</strong> `;
-
-            // Continua com a leitura normal dos dados
             const importedData = parseCsvRows(rawRows);
             if (!importedData.length) {
                 throw new Error('O CSV não contém linhas de dados após o cabeçalho.');
+            }
+
+            const competence = extractCsvCompetence(rawRows);
+            const indicador = document.getElementById('mesIndicador');
+            if (indicador) indicador.textContent = competence ? `(${competence})` : '';
+
+            const periodText = document.getElementById('period');
+            if (periodText) {
+                periodText.textContent = competence ? `Competência: ${competence}` : 'Competência:';
             }
 
             DATA = importedData;
